@@ -29,6 +29,12 @@ router.put("/:id", (req, res) => {
                 });
         });
 });
+router.delete("/", (req, res) => {
+    Book.deleteMany({})
+        .then(book => {
+            res.send(book);
+        });
+});
 router.delete("/:id", (req, res) => {
     Book.deleteOne({_id: req.params.id})
         .then(book => {

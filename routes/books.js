@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const Book = require('../book');
+const Book = require('../models/book');
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
@@ -27,7 +27,6 @@ router.get('/:id', (req, res) => {
         });
 });
 router.post('/', upload.single('cover'), (req, res) => {
-    console.log(req.file)
     Book.create({
         title: req.body.title,
         author: req.body.author,

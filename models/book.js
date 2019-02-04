@@ -11,11 +11,27 @@ const BookSchema = new Schema({
         default: 'no description',
     },
     comments: [{
-        user: Object,
+        user: {
+            type: String,
+            default: 'Anonymous User',
+        },
         comment: String,
     }], //array of comments' objects
+    readers: [{
+        type: String,
+    }],
     likes: [{
-        user: Object,
+        user: {
+            type: String,
+            default: 'Anonymous User',
+        },
+        like: Boolean,
+    }],
+    dislikes: [{
+        user: {
+            type: String,
+            default: 'Anonymous User',
+        },
         like: Boolean,
     }]}, { versionKey: false });
 

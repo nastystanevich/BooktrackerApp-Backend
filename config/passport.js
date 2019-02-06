@@ -1,38 +1,52 @@
 const passport = require('passport');
-const User = require('./models/user');
 const LocalStrategy = require('passport-local').Strategy;
+const User = require('../models/user');
+const passportJWT = require('passport-jwt');
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
 
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
+require('dotenv').config();
 
-passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-        done(err, user);
-    });
-});
+passport.use(
+    new LocalStrategy({
+        usernameField: 'username',
+        passwordField: 'password',
+    },
+    function (username, password, done) {
+        
+        User.findOne({ username: username }, (err, user) => {
+            console.log(user);
+            if (err) { return done(err); }
+            if (!user) {
+                return done(null, false, { message: 'Incorrect username.' });
+            }
+            /*if (!user.validPassword(password)) {
+                return done(null, false, { message: 'Incorrect password.' });
+            }*/
+            return done(null, user);
+        });
+    }
+    ));
 
-passport.use('local.signup', new LocalStrategy({
-    usernameField: 'userName',
-    passwordField: 'password',
-    passReqToCallback: true,
-}, (req, userName, password, done) => {
-    User.findOne({'userName': userName}, (err, user) => {
-        if (err) {
-            return done(err);
-        }
-        if (user) {
-            return done(null, false, {message: 'Username is already in use'});
-        }
-        const newUser = new User();
-        newUser.userName = userName;
-        newUser.password = password;
-        // newUser.password = newUser.encryptPassword(password);
-        newUser.save((err, result) => {
+const opts = {
+    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    secretOrKey: process.env.SECRET_KEY,
+};
+passport.use(
+    new JWTStrategy(opts, (jwtPayload, done) => {
+        User.findOne({_id: jwtPayload._id}, (err, user) => {
             if (err) {
                 return done(err);
             }
-            return done(null, newUser);
-        });
-    })
-}))
+            if (user) {
+                done(null, user);
+            } else {
+                done(null, false);
+            }
+        }
+        ); }));
+
+module.exports = passport;
+
+
+

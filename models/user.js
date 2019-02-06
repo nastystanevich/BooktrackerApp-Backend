@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 // const bcrypt = require('bcrypt-nodejs');
 
 const UserSchema = new Schema({
-    userName: {
+    username: {
         type: String,
         required: true,
     },
@@ -15,7 +15,9 @@ const UserSchema = new Schema({
         types: String,
     }],
 });
-
+UserSchema.methods.validPassword = (password) => {
+    return this.password === password;
+};
 // UserSchema.methods.encryptPassword = (password) => {
 //     return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);
 // };

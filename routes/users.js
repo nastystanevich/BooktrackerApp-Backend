@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
-const passport = require('passport');
 
-router.post('/login', (req, res) => {
-
-})
+router.post('/signup', (req, res) => {
+    console.log(req);
+    User.create({
+        username: req.body.username,
+        password: req.body.password,
+    }).then(user => res.json(user));
+});
 
 module.exports = router;

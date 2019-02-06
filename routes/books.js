@@ -16,21 +16,21 @@ const upload = multer({storage: storage});
 
 router.get('/', (req, res) => {
     Book.find({})
-        .then(book => {
-            res.send(book);
+        .then(books => {
+            res.json(books);
         });
 });
 router.get('/:id', (req, res) => {
     Book.findById({_id: req.params.id})
         .then(book => {
-            res.send(book);
+            res.json(book);
         });
 });
 router.post('/', upload.single('cover'), (req, res) => {
     Book.create({
         title: req.body.title,
         author: req.body.author,
-        cover: 'http://localhost:3002/' + req.file.path.replace(/\\/g, '/'),
+        cover: req.file.path.replace(/\\/g, '/'),
         published: req.body.published,
         description: req.body.description,
         comments: [{
@@ -40,30 +40,24 @@ router.post('/', upload.single('cover'), (req, res) => {
         likes: [{
             user: req.body.user,
             like: req.body.like,
-        }]})
-        .then(book => {
-            res.send(book);
-        });
+        }],
+    }).then(book => {
+        res.json(book);
+    });
 });
 router.put('/:id', (req, res) => {
     Book.findByIdAndUpdate({_id: req.params.id}, req.body)
         .then(() => {
             Book.findOne({_id: req.params.id})
                 .then(book => {
-                    res.send(book);
+                    res.json(book);
                 });
-        });
-});
-router.delete('/', (req, res) => {
-    Book.deleteMany({})
-        .then(book => {
-            res.send(book);
         });
 });
 router.delete('/:id', (req, res) => {
     Book.deleteOne({_id: req.params.id})
         .then(book => {
-            res.send(book);
+            res.json(book);
         });
 });
 

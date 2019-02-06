@@ -1,20 +1,28 @@
 
-const express = require("express");
+const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+// const session = require('express-session');
+// const passport = require('passport');
+// const flash = require('connect-flash');
+require('./config/passport');
 
-require('dotenv').config(); 
+require('dotenv').config();
 
 const app = express();
 const port = process.env.API_PORT;
 
 mongoose.connect(process.env.DB_PATH, { useNewUrlParser: true });
 
-app.use(bodyParser.json()); 
+app.use('/static', express.static('static'));
+app.use(cors());
+app.use(bodyParser.json());
 
-const routes = require('./routes')
-app.use("/api", routes);
+
+const routes = require('./routes');
+app.use('/api', routes);
 
 app.listen(port, () => {
     console.log(`Listen on http://localhost:${port}`);
-})
+});

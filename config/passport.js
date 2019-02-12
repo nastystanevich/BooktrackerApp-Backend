@@ -13,16 +13,15 @@ passport.use(
         passwordField: 'password',
     },
     function (username, password, done) {
-        
+
         User.findOne({ username: username }, (err, user) => {
-            console.log(user);
             if (err) { return done(err); }
             if (!user) {
                 return done(null, false, { message: 'Incorrect username.' });
             }
-            /*if (!user.validPassword(password)) {
+            if (!user.validPassword(password)) {
                 return done(null, false, { message: 'Incorrect password.' });
-            }*/
+            }
             return done(null, user);
         });
     }
@@ -34,14 +33,14 @@ const opts = {
 };
 passport.use(
     new JWTStrategy(opts, (jwtPayload, done) => {
-        User.findOne({_id: jwtPayload._id}, (err, user) => {
+        User.findOne({username: jwtPayload.username}, (err, user) => {
             if (err) {
                 return done(err);
             }
             if (user) {
                 done(null, user);
             } else {
-                done(null, false);
+                done(null, false, { message: 'Incorrect username.' });
             }
         }
         ); }));

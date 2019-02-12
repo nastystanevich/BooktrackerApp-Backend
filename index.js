@@ -3,9 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-// const session = require('express-session');
-// const passport = require('passport');
-// const flash = require('connect-flash');
 require('./config/passport');
 
 require('dotenv').config();

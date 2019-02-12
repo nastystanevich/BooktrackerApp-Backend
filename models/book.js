@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const autopopulate = require('mongoose-autopopulate');
 const Schema = mongoose.Schema;
 
 const BookSchema = new Schema({
@@ -11,30 +12,29 @@ const BookSchema = new Schema({
         default: 'no description',
     },
     comments: [{
-        user: {
-            type: String,
-            default: 'Anonymous User',
+        postedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
         },
         comment: String,
     }], //array of comments' objects
     readers: [{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        autopopulate: { select: 'username' },
     }],
     likes: [{
-        user: {
-            type: String,
-            default: 'Anonymous User',
-        },
-        like: Boolean,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        autopopulate: { select: 'username' },
     }],
     dislikes: [{
-        user: {
-            type: String,
-            default: 'Anonymous User',
-        },
-        like: Boolean,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        autopopulate: { select: 'username' },
     }]}, { versionKey: false });
 
-const Book = mongoose.model('book', BookSchema);
+BookSchema.plugin(autopopulate);
+const Book = mongoose.model('Book', BookSchema);
 
 module.exports = Book;

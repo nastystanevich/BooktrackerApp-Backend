@@ -16,6 +16,11 @@ const upload = multer({storage: storage});
 
 router.get('/', (req, res) => {
     Book.find({})
+        // .populate('readers', 'username')
+        // .exec()
+        .populate('likes', 'username')
+        // .populate('dislikes', 'username')
+        // .populate('readres', 'username')
         .then(books => {
             res.json(books);
         });
@@ -33,18 +38,54 @@ router.post('/', upload.single('cover'), (req, res) => {
         cover: req.file.path.replace(/\\/g, '/'),
         published: req.body.published,
         description: req.body.description,
-        comments: [{
+        /*comments: [{
             user: req.body.user,
+            //user: null,
             comment: req.body.comment,
-        }],
-        likes: [{
-            user: req.body.user,
-            like: req.body.like,
-        }],
+        }],*/
+        readers: req.body.read,
+        likes: req.body.like,
+        dislikes: req.body.dislike,
     }).then(book => {
         res.json(book);
     });
 });
+router.put('/:id/like', (req, res) => {
+    Book.findOneAndUpdate(
+        {_id: req.params.id},
+        {$push: {likes: req.body.like}},
+        {
+            safe: true,
+            upsert: true,
+        },
+    ).then(book => {
+        res.json(book);
+    });
+});
+// router.put('/:id/dislike', (req, res) => {
+//     Book.findOneAndUpdate(
+//         {_id: req.params.id},
+//         {$push: {dislikes: req.body.dislikes}},
+//         {
+//             safe: true,
+//             upsert: true,
+//         },
+//     ).then(book => {
+//         res.json(book);
+//     });
+// });
+// router.put('/:id/read', (req, res) => {
+//     Book.findOneAndUpdate(
+//         {_id: req.params.id},
+//         {$push: {readers: req.body.readers}},
+//         {
+//             safe: true,
+//             upsert: true,
+//         },
+//     ).then(book => {
+//         res.json(book);
+//     });
+// });
 router.put('/:id', (req, res) => {
     Book.findByIdAndUpdate({_id: req.params.id}, req.body)
         .then(() => {

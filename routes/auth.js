@@ -6,11 +6,11 @@ const User = require('../models/user');
 require('dotenv').config();
 
 router.post('/login', (req, res) => {
-    passport.authenticate('local', {session: false}, (err, user) => {
+    passport.authenticate('local', {session: false}, (err, user, message) => {
         if (err || !user) {
             return res.status(400).json({
                 err: err,
-                message: 'Something is not right',
+                message: message,
                 user: user,
             });
         }

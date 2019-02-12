@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// const bcrypt = require('bcrypt-nodejs');
 
 const UserSchema = new Schema({
     username: {
@@ -11,21 +10,25 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
-    books: [{ // the array of books' id
-        types: String,
+    readBooks: [{ // the array of read books' id
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+        
     }],
-});
-UserSchema.methods.validPassword = (password) => {
+    likedBooks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+    }],
+    dislikedBooks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+    }],
+}, { versionKey: false });
+
+UserSchema.methods.validPassword = function (password) {
     return this.password === password;
 };
-// UserSchema.methods.encryptPassword = (password) => {
-//     return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);
-// };
 
-// UserSchema.methods.validPassword = (password) => {
-//     return bcrypt.compareSync(password, this.password);
-// };
-
-const User = mongoose.model('user', UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

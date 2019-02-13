@@ -12,24 +12,22 @@ const BookSchema = new Schema({
         default: 'no description',
     },
     comments: [{
-        postedBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-        },
-        comment: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+        autopopulate: true,
     }], //array of comments' objects
     readers: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         autopopulate: { select: 'username' },
     }],
     likes: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
-        autopopulate: { select: 'username' },
+        autopopulate: { select: '_id' },
     }],
     dislikes: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         autopopulate: { select: 'username' },
     }]}, { versionKey: false });

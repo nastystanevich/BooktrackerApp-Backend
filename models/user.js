@@ -10,19 +10,23 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+        autopopulate: true,
+    }],
     readBooks: [{ // the array of read books' id
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
-        
     }],
-    likedBooks: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Book',
-    }],
-    dislikedBooks: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Book',
-    }],
+    // likedBooks: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Book',
+    // }],
+    // dislikedBooks: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Book',
+    // }],
 }, { versionKey: false });
 
 UserSchema.methods.validPassword = function (password) {

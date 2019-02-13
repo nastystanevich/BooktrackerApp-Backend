@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const Book = require('../models/book');
+const Comment = require('../models/comment');
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
@@ -38,11 +39,6 @@ router.post('/', upload.single('cover'), (req, res) => {
         cover: req.file.path.replace(/\\/g, '/'),
         published: req.body.published,
         description: req.body.description,
-        /*comments: [{
-            user: req.body.user,
-            //user: null,
-            comment: req.body.comment,
-        }],*/
         readers: req.body.read,
         likes: req.body.like,
         dislikes: req.body.dislike,
@@ -101,5 +97,9 @@ router.delete('/:id', (req, res) => {
             res.json(book);
         });
 });
-
+router.get('/:id/comments', (req, res) => {
+    Comment.find({book: req.params.id})
+        .then(comments => res.json(comments));
+});
+router.put('/:id/like', )
 module.exports = router;
